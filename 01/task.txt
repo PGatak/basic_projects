@@ -1,0 +1,4 @@
+W arkuszu dane dla 2 grup niezależnych, podane zostały wyniki przed i po działaniu czynnika dla każdej grupy.
+Proszę przetestować każdą grupę osobno i porównać grupy.
+Proszę spróbować wykonać regresję liniową.
+Proszę również napisać krótki raport z podsumowaniem otrzymanych wyników.

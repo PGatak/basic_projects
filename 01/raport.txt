@@ -1,0 +1,26 @@
+W celu sprawdzenia normalności rozkładów zostały przeprowadzone testy Shapiro-Wilka.
+Testy wykazały, że:
+- rozkład normalny występuje dla danych "I przed", oraz "II po"
+- rozkład normalny  nie występuje dla danych "II przed", oraz "I po"
+
+Wykresy porównujące dane do rozkładów normalnych przedstawiają pliki graficzne:
+I_przed.png, I_po.png, II_przed.png, II_po.png
+
+W celu przetestowania danych "I_przed" z "I_po", zastosowano nieparametryczny test Wilcoxona:
+Testy wykazały, że grupy różnią się między sobą.
+
+W celu przetestowania danych "II_przed" z "II_po", zastosowano nieparametryczny test Wilcoxona:
+Testy wykazały, że grupy różnią się między sobą.
+
+W celu przetestowania danych "I_przed" z "II_przed", zastosowano nieparametryczny test Manna Whitney'a:
+Testy wykazały, że grupy nie różnią się między sobą.
+
+W celu przetestowania danych "I_po" z "II_po", zastosowano nieparametryczny test Manna Whitney'a:
+Testy wykazały, że grupy różnią się między sobą.
+
+Przeprowadzając regresję liniową otrzymaliśmy następujące wyniki:
+- dla danych "I_przed" z "I_po" współczynnik dopasowania wynosi 0.441 (linear_regression_I.png)
+- dla danych "II_przed" z "II_po" współczynnik dopasowania wynosi 0.586 (linear_regression_II.png)
+
+Rozrzut wartości w obydwu przypadkach jest dość spory i nie jesteśmy w stanie niczego przewidzieć.
+Występuje pewnego rodzaju zależność liniowa, natomiast jest ona zbyt słaba.
