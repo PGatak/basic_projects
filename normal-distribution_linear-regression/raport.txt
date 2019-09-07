@@ -24,3 +24,5 @@ Przeprowadzając regresję liniową otrzymaliśmy następujące wyniki:
 
 Rozrzut wartości w obydwu przypadkach jest dość spory i nie jesteśmy w stanie niczego przewidzieć.
 Występuje pewnego rodzaju zależność liniowa, natomiast jest ona zbyt słaba.
+
+
