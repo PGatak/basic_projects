@@ -1,3 +1,4 @@
+statistics, machine learning projects
 # PROJEKTY:
 
 # normal-distribution_linear-regression
