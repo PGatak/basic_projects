@@ -7,6 +7,10 @@ import requests
 
 URL = "https://pl.jooble.org/praca-opieka-nad-osoba-starsza/Niemcy?date=3"
 
+NEXT_PAGES = []
+VISITED_URLS = {}
+ID = 0
+
 
 class HousingOffers:
     def __init__(self, **kwargs):
@@ -36,7 +40,9 @@ def fix(offer):
         "6 dni temu": "144",
         "7 dni temu": "168",
         "godzin": "",
-        "temu": ""
+        "temu": "",
+        "y": "",
+        "ę": ""
     }
 
     for k, v in replacements.items():
@@ -45,58 +51,77 @@ def fix(offer):
     offer.date = offer.date.strip()
 
 
-def extract_next_url(text):
+def extract_paging(text):
+    global NEXT_PAGES
+
     soup = BeautifulSoup(text, 'lxml')
-    tag = soup.find(attrs={"data-dir": "next"})
-    next_url = tag.attrs["href"] if tag else None
-    print("NEXT URL", next_url)
-    return next_url
+    tag = soup.find("div", {"id": "paging"})
+    links = tag.find_all("a")
+    urls = list(sorted(
+        filter(
+            bool,
+            [link.attrs.get("data-href", None) for link in links],
+        )
+    ))
+
+    for url in urls:
+        if url not in NEXT_PAGES and url not in VISITED_URLS:
+            NEXT_PAGES.append(url)
 
 
 def extract_offers(text):
+    global ID
     offers = []
 
     soup = BeautifulSoup(text, 'lxml')
     jobs = soup.find_all(class_="vacancy_wrapper vacancy-js vacancy_wrapper-js")
-    id = 0
+
     for job in jobs:
-        id += 1
+        ID += 1
         try:
             company_name = job.find(class_='company-name').text
         except Exception as e:
+            print("company_name", e)
             company_name = "EMPTY"
         try:
             salary = job.find(class_='salary').text
         except Exception as e:
+            print("salary", e)
             salary = "EMPTY"
         try:
             location = job.find(class_='date_location__region').text
         except Exception as e:
+            print("location", e)
             location = "EMPTY"
         try:
             title = job.find(class_='link-position job-marker-js').text.strip()
         except Exception as e:
+            print("title", e)
             title = "EMPTY"
         try:
             link1 = job.find(class_='link-position job-marker-js')
             link = link1.attrs["href"]
         except Exception as e:
+            print("link", e)
             link = "EMPTY"
         try:
             date = job.find(class_='date_location').text
             date = date[0:17]
         except Exception as e:
+            print("date", e)
             date = "EMPTY"
 
-        offer = HousingOffers(id=id, company_name=company_name, salary=salary, location=location,
-                              title=title, link=link, date=date)
-        fix(offer)
-        offers.append(offer)
+        if "opiek" in title.lower():
+            offer = HousingOffers(id=ID, company_name=company_name, salary=salary,
+                                  location=location,
+                                  title=title, link=link, date=date)
+            fix(offer)
+            offers.append(offer)
 
     jobs = soup.find_all(class_="vacancy_wrapper vacancy-js vacancy_wrapper-js vacancy_wrapper--easy-apply")
 
     for job in jobs:
-        id += 1
+        ID += 1
         try:
             company_name = job.find(class_='company-name').text
         except Exception as e:
@@ -124,10 +149,11 @@ def extract_offers(text):
         except Exception as e:
             date = "EMPTY"
 
-        offer = HousingOffers(id=id, company_name=company_name, salary=salary, location=location,
-                              title=title, link=link, date=date)
-        fix(offer)
-        offers.append(offer)
+        if "opiek" in title.lower():
+            offer = HousingOffers(id=ID, company_name=company_name, salary=salary, location=location,
+                                  title=title, link=link, date=date)
+            fix(offer)
+            offers.append(offer)
 
     return offers
 
@@ -151,23 +177,28 @@ def main():
     while next_url:
         page_id += 1
         response = session.get(next_url)
+        VISITED_URLS[next_url] = True
 
         if response.ok:
             print("Extract")
             source = response.text
             offers = extract_offers(source)
-            next_url = extract_next_url(source)
+            extract_paging(source)
 
             output_filename = os.path.join(output_dir,
                                            "plik-%d.json" % page_id)
             with open(output_filename, 'w+', encoding='utf-8') as json_file:
                 json.dump([o.__dict__ for o in offers], json_file)
                 print("WROTE:", output_filename)
+
+            url = NEXT_PAGES.pop(0) if NEXT_PAGES else None
+            if not url:
+                break
+            elif url not in VISITED_URLS:
+                next_url = url
         else:
             print("ERROR")
             next_url = None
-
-        print(next_url)
 
     create_result_file(output_dir)
 
@@ -181,7 +212,7 @@ def create_result_file(directory):
             for o in offers:
                 merged_dict[o["id"]] = o
 
-    print(merged_dict)
+    #print(merged_dict)
 
     output_filename = os.path.join(directory, "results.csv")
     with open(output_filename, 'w+', encoding='utf-8') as csvfile:
