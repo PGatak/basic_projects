@@ -8,4 +8,4 @@ Klasyfikacja przy użyciu: "Drzewa decyzyjne", "Decyzyjny las losowy", "Regresja
 Sprawdzenie korelacji zachodzących pomiędzy wszystkimi atrybutami.
 
 # jooble_jobs_scraping_bs4
-Automatyzacja pozyskiwania ofert pracy w serwisie jooble.pl. Wykorzystano bibiliotekę Beautiful Soup 4.
+Automatyzacja pozyskiwania ofert pracy w serwisie jooble.pl dla wybranej kategorii. Wykorzystano bibiliotekę Beautiful Soup 4.
