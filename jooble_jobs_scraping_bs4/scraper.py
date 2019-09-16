@@ -20,11 +20,11 @@ class HousingOffers:
         self.location = kwargs.pop("location", None)
         self.title = kwargs.pop("title", None)
         self.link = kwargs.pop("link", None)
-        self.date = kwargs.pop("date", None)
+        self.time = kwargs.pop("time", None)
 
     def __str__(self):
         return (
-            "{id} {company_name} {salary} {location} {link} {title} {link} {date}"
+            "{id} {company_name} {salary} {location} {link} {title} {link} {time}"
         ).format(
             **self.__dict__
         )
@@ -46,9 +46,9 @@ def fix(offer):
     }
 
     for k, v in replacements.items():
-        offer.date = offer.date.replace(k, v)
+        offer.time = offer.time.replace(k, v)
 
-    offer.date = offer.date.strip()
+    offer.time = offer.time.strip()
 
 
 def extract_paging(text):
@@ -105,16 +105,16 @@ def extract_offers(text):
             print("link", e)
             link = "EMPTY"
         try:
-            date = job.find(class_='date_location').text
-            date = date[0:17]
+            time = job.find(class_='date_location').text
+            time = time[0:17]
         except Exception as e:
             print("date", e)
-            date = "EMPTY"
+            time = "EMPTY"
 
         if "opiek" in title.lower():
             offer = HousingOffers(id=ID, company_name=company_name, salary=salary,
                                   location=location,
-                                  title=title, link=link, date=date)
+                                  title=title, link=link, time=time)
             fix(offer)
             offers.append(offer)
 
@@ -144,14 +144,14 @@ def extract_offers(text):
         except Exception as e:
             link = "EMPTY"
         try:
-            date = job.find(class_='date_location').text
-            date = date[0:17]
+            time = job.find(class_='date_location').text
+            time = time[0:17]
         except Exception as e:
-            date = "EMPTY"
+            time = "EMPTY"
 
         if "opiek" in title.lower():
             offer = HousingOffers(id=ID, company_name=company_name, salary=salary, location=location,
-                                  title=title, link=link, date=date)
+                                  title=title, link=link, time=time)
             fix(offer)
             offers.append(offer)
 
@@ -217,7 +217,7 @@ def create_result_file(directory):
     output_filename = os.path.join(directory, "results.csv")
     with open(output_filename, 'w+', encoding='utf-8') as csvfile:
         csv_writer = csv.DictWriter(csvfile,
-                                    fieldnames=["id", "date", "company_name", "salary", "location", "title", "link"],
+                                    fieldnames=["id", "time", "company_name", "salary", "location", "title", "link"],
                                     delimiter=",")
         csv_writer.writeheader()
         csv_writer.writerows(merged_dict.values())
