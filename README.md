@@ -9,3 +9,6 @@ Sprawdzenie korelacji zachodzących pomiędzy wszystkimi atrybutami.
 
 # jooble_jobs_scraping_bs4
 Automatyzacja pozyskiwania ofert pracy w serwisie jooble.pl dla wybranej kategorii. Wykorzystano bibiliotekę Beautiful Soup 4.
+
+# perceptron-heart
+Zastosowanie sieci neuronowych - perceptron. Porównanie funkcji aktywacji neuronu.
