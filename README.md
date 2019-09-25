@@ -12,3 +12,5 @@ Automatyzacja pozyskiwania ofert pracy w serwisie jooble.pl dla wybranej kategor
 
 # perceptron-heart
 Zastosowanie sieci neuronowych - perceptron. Porównanie funkcji aktywacji neuronu.
+# titanic
+Kaggle.
